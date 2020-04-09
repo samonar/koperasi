@@ -9,6 +9,9 @@ class Pakan extends CI_Controller{
         $this->load->model(array('Setoran_model','Pos_model','Sadur_model','SimpanPinjam_model','ModelAnggota','Pakan_model'));
         $this->load->library(array('form_validation','upload','image_lib','template','session'));
         $this->load->helper(array('form', 'url', 'html'));
+        if(empty($this->session->userdata('id_user'))){
+            redirect('user');
+        }
     }
 
     function index(){

@@ -11,6 +11,9 @@ class Setoran extends CI_Controller
         $this->load->model(array('Setoran_model','Pos_model','ModelAnggota'));
         $this->load->library(array('form_validation','upload','image_lib','template','session'));
         $this->load->helper(array('form', 'url', 'html'));
+        if(empty($this->session->userdata('id_user'))){
+            redirect('user');
+        }
     }
 
     public function index()

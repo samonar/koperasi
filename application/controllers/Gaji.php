@@ -9,6 +9,9 @@ class Gaji extends CI_Controller{
         $this->load->model(array('Setoran_model','Simpanan_model','Gaji_model','Sadur_model','SimpanPinjam_model','ModelAnggota','Pakan_model','ModelToko','Sp_model','Keswan_model','Harga_model'));
         $this->load->library(array('form_validation','upload','image_lib','template','session','format_in'));
         $this->load->helper(array('form', 'url', 'html'));
+        if(empty($this->session->userdata('id_user'))){
+            redirect('user');
+        }
     }
 
     function index(){

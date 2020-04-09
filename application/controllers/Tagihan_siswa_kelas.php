@@ -22,14 +22,9 @@ class Tagihan_siswa_kelas extends CI_Controller
          //$this->load->model(array('Jn_tagihan_model','Kelas_siswa_model','Siswa_model','Kelas_model','Pembayaran_model','Tagihan_bulanan_model','Th_akademik_model'));
         $this->load->library(array('form_validation','upload','image_lib','template','session'));
         $this->load->helper(array('form', 'url', 'html'));
-
-           $session_login=$this->session->userdata('logged_in');
-           $user_data=$this->User_model->get_by_id($this->session->userdata('nik'));
-           $cek=$this->session->userdata('nama_jabatan');
-           $session_jabatan=$this->session->userdata('nama_jabatan');
-           if($session_jabatan=='siswa'){
-               redirect('user');
-           }
+        if(empty($this->session->userdata('id_user'))){
+          redirect('user');
+      }
 
     }
 

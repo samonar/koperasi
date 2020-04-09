@@ -9,11 +9,9 @@ class Harga extends CI_Controller
         $this->load->model(array('ModelToko','Setoran_model','Harga_model','SimpanPinjam_model','ModelAnggota'));
         $this->load->library(array('form_validation','upload','image_lib','template','session'));
         $this->load->helper(array('form', 'url', 'html'));
-        /*$cek=$this->session->userdata('nama');
-        if($session_jabatan!='admin'){
-            redirect(site_url('login'));
-        }*/
-
+        if(empty($this->session->userdata('id_user'))){
+            redirect('user');
+        }
    }
 
    function index(){

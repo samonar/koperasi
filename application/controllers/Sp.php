@@ -9,6 +9,9 @@ class Sp extends CI_Controller
 		$this->load->model('modelSp');
 		$this->load->model('modelAnggota');
 		$this->load->helper(array('form', 'url', 'file'));
+		if(empty($this->session->userdata('id_user'))){
+            redirect('user');
+        }
 	}
 
 	public function index()

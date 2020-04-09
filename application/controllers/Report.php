@@ -8,6 +8,9 @@ class Report extends CI_Controller{
     parent::__construct();
     $this->load->library(array('form_validation','upload','image_lib','template','session'));
     $this->load->helper(array('form', 'url', 'html','pembilang'));
+    if(empty($this->session->userdata('id_user'))){
+      redirect('user');
+  }
   }
 
   function top()

@@ -9,6 +9,9 @@ class StokPakan extends CI_Controller
 		$this->load->model('modelStokpakan');
 		$this->load->library('form_validation');
 		$this->load->helper(array('form','url','file'));
+		if(empty($this->session->userdata('id_user'))){
+            redirect('user');
+        }
 	}
 	
 	public function index()

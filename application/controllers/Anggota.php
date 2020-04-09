@@ -8,7 +8,10 @@ class Anggota extends CI_Controller
 		parent::__construct();
 		$this->load->model(array('modelAnggota','modelToko','Setoran_model','Pos_model','Sadur_model','SimpanPinjam_model','ModelAnggota','Pakan_model'));
         $this->load->library(array('form_validation','upload','image_lib','template','session'));
-        $this->load->helper(array('form', 'url', 'html'));
+		$this->load->helper(array('form', 'url', 'html'));
+		if(empty($this->session->userdata('id_user'))){
+            redirect('user');
+        }
 	}
 
 	public function index()
