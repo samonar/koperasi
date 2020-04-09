@@ -36,7 +36,10 @@ class Pakan_model extends CI_Model
 	public function save($data)
 	{
 		return $this->db->insert($this->table, $data);
-	}
+    }
+    function insert_bayar($data){
+        $this->db->insert('pakan_bayar',$data);
+    }
 
 	public function update_pakai($data)
 	{

@@ -10,6 +10,9 @@ class Simpan_pinjam extends CI_Controller
         $this->load->model(array('Setoran_model','Pos_model','Sadur_model','SimpanPinjam_model','ModelAnggota','Pakan_model','Sp_model'));
         $this->load->library(array('form_validation','upload','image_lib','template','session'));
         $this->load->helper(array('form', 'url', 'html'));
+        if(empty($this->session->userdata('id_user'))){
+            redirect('user');
+        }
     }
 
     function index(){
@@ -159,6 +162,7 @@ class Simpan_pinjam extends CI_Controller
             'active_header' =>'sp',
             'active'        =>'',
             'show'          =>'pinjam',
+            'jn_form'       => 'form_pinjaman',
             'action'        => site_url('simpan_pinjam/editPinjam_action'),
             'id_sp'         => $id,
             'id_anggota'    => $data_sp->id_anggota,

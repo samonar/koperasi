@@ -112,14 +112,14 @@
                                     <input type="hidden" name="id_sp" value=<?php if (isset($id_sp)) {
                                         echo $id_sp;
                                     }?>>
-                                    <input type="number" class="form-control col-md-6" name="nominal" id="angsuran" value=<?php if (isset($nominal)) {
+                                    <input type="number" required class="form-control col-md-6" name="nominal" id="angsuran" value=<?php if (isset($nominal)) {
                                         echo $nominal;
                                     } ?> required>
                                 </div>
 
                                 <label for="inputSkills" class="col-sm-6 control-label">Sanggup Mengangsur</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control col-md-6" name="angsuran" id="nominal" value=<?php if (isset($angsuran)) {
+                                    <input type="number" required class="form-control col-md-6" name="angsuran" id="nominal" value=<?php if (isset($angsuran)) {
                                         echo $angsuran;
                                     } ?> required>
                                     <div class="input-group-append">

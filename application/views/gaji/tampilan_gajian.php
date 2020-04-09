@@ -142,7 +142,7 @@
                 //total potongan
                 
                 ?>
-                <form action="gaji/gaji_action" method="get">
+                <form action="<?php echo $action ?>" method="POST">
                     <tr>
                         <td style="text-align:center;">01 s/d 10</td>
                         <td style="text-align:center;"><?php echo array_sum($periode1) ?></td>
@@ -164,13 +164,14 @@
                     <tr>
                         <th colspan="3" style="text-align:center;">Jumlah</th>
                         <td style="text-align:center;">Rp <?php echo $tot_setoran?></td>
+                        <input type="hidden" name="setoran" value=<?php echo $tot_setoran?>>
                     </tr>
                     <tr>
                         <td colspan="4" ></td>
                     </tr>
                     <tr>
                         <th colspan="3" >PENERIMAAN KOTOR</th> 
-                        <td style="text-align:center;">Rp <?php echo ($data_hargaAktif->nominal_harga * array_sum($periode3)) ?></td>
+                        <td style="text-align:center;">Rp <?php $tot_setoran=($data_hargaAktif->nominal_harga * array_sum($periode3)); echo $tot_setoran ?></td>
                     </tr>
                     <tr>
                         <th colspan="4" >POTONGAN</th> 
@@ -178,6 +179,8 @@
                     <tr>
                         <th style="text-align:center;">Simpanan Wajib</th>
                         <td colspan="3"><input type="hidden" class="form-control" name="simpanan_wajib" id="" value=10000>Rp 10.000</td>
+                        <input type="hidden" class="form-control" name="id_anggota" id="" value=<?php echo $identitas->id_anggota ?> >
+                        
                     </tr>
                     <tr>
                         <th style="text-align:center;">Simpanan Sukarela</th>
@@ -193,28 +196,51 @@
                     </tr>
                     <tr>
                         <th style="text-align:center;">Konsentrat</th>
-                        <td colspan="3"><input type="hidden" name="konsentrat" id="" value=<?php echo $tagihan_pakan ?>>Rp <?php echo $tagihan_pakan ?></td>
+                        <td colspan="3"  class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Rp </span>
+                            </div>
+                            <input class="form-control col-md-8" type="number" id="konsentrat" name="konsentrat" id="" value=<?php echo $tagihan_pakan ?> onkeypress="return handleEnter(this, event)" onchange="summation();"></td>
                     </tr>
                     <tr>
                         <th style="text-align:center;">Simpan Pinjam</th>
-                        <td colspan="3"><input type="hidden" name="sp" value=<?php echo $tagihan_angsuran ?>>Rp <?php echo $tagihan_angsuran ?>  </td>
+                        <td colspan="3" class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Rp </span>
+                            </div>
+                            <input class="form-control col-md-8" type="number" id="sp" name="sp" value=<?php echo $tagihan_angsuran ?> onkeypress="return handleEnter(this, event)" onchange="summation();">
+                        </td>
+                       
                     </tr>
                     <tr>
                         <th style="text-align:center;">Toko</th>
-                        <td colspan="3"><input type="hidden" name="toko" value=<?php echo $tagihan_toko ?>>Rp <?php echo $tagihan_toko ?></td>
+                        <td colspan="3"  class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Rp </span>
+                            </div>
+                            <input class="form-control col-md-8" type="number" id="toko" name="toko" value=<?php echo $tagihan_toko ?> onkeypress="return handleEnter(this, event)" onchange="summation();">
+                        </td>
                     </tr>
                     <tr>
-                        <th colspan="3" >JUMLAH POTONGAN</th>
-                        <td  style="text-align:center;" ><?php 
-                        $tot_potongan=(1000+$simsuk+$keswan+$dana_desa+$tagihan_pakan+$tagihan_angsuran+$tagihan_toko);
-                        echo "Rp ".$tot_potongan  ?></td>
+                        <th style="text-align:center;">Potongan Lain</th>
+                        <td colspan="3"  class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Rp </span>
+                            </div><input class="form-control col-md-8" type="number" id="potlain" name="potlain" value="0" onchange="summation();"></td>
+                    </tr>
+                    <tr >
+                        <th colspan="2" >JUMLAH POTONGAN</th>
+                        
+                        <th colspan="4"  id="total" style="text-align:left;" ><?php 
+                        $tot_potongan=(10000+$simsuk+$keswan+$dana_desa+$tagihan_pakan+$tagihan_angsuran+$tagihan_toko); echo "Rp ".$tot_potongan  ?></th>
+                        
                     </tr>
                     <tr>
                         <td colspan="4"></td>
                     </tr>
                     <tr>
-                        <th colspan="3">TOTAL PENDAPATAN BERSIH</th>
-                        <th>Rp <?php echo $tot_setoran-$tot_potongan ?></th>
+                        <th colspan="3" >TOTAL PENDAPATAN BERSIH</th>
+                        <th id="totalbersih" style="text-align: center;"><?php echo $tot_setoran-$tot_potongan  ?></th>
                     </tr>
                 </tbody>
 
@@ -224,8 +250,38 @@
         </div>
     </div>
 </div>
-
-
+<script type="text/javascript">
+    function summation()
+    {
+        var spwajib = 10000;
+        var simsuk = <?= $simsuk ?>;
+        var keswan = <?= $keswan ?>;
+        var dana = <?= $dana_desa ?>;
+        var totalsetor = <?= $tot_setoran ?>;
+        var potlain = document.getElementById('potlain').value;
+        var kons = document.getElementById('konsentrat').value;
+        var sp = document.getElementById('sp').value;
+        var toko = document.getElementById('toko').value;
+        var total = (kons*1)+(sp*1)+(toko*1)+spwajib+simsuk+keswan+dana+(potlain*1);
+        var totalbersih = totalsetor - total;
+        document.getElementById('total').innerHTML = "Rp "+total;
+        document.getElementById('totalbersih').innerHTML = "Rp "+totalbersih;
+    }
+    function handleEnter (field, event) {
+		var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
+		if (keyCode == 13) {
+			var i;
+			for (i = 0; i < field.form.elements.length; i++)
+				if (field == field.form.elements[i])
+					break;
+			i = (i + 1) % field.form.elements.length;
+			field.form.elements[i].focus();
+			return false;
+		} 
+		else
+		return true;
+	}      
+</script>
 <?php
 // print_r($identitas);
 
@@ -253,22 +309,3 @@
 
 
 //keswan
-if (empty($data_keswan)) {
-    $sumKre_keswan[]=0;
-    $sumDeb_keswan[]=0;
-}else {
-    foreach ($data_keswan as $data) {
-        if ($data->jenis == 'K') {
-            $sumKre_keswan[]=$data->nominal;
-            $sumDeb_keswan[]=0;
-        }else {
-            $sumDeb_keswan[]=$data->nominal;
-            $sumKre_keswan[]=0;
-        }
-    }
-}
-$tagihan_keswan=(array_sum($sumKre_keswan)-array_sum($sumDeb_keswan));
-echo "<br>";
-echo "total tagihan keswan : ".$tagihan_keswan;
-echo "<br>";
-echo "pendapatan bersih : : ".($tot_setoran-($tagihan_pakan+$tagihan_toko+$tagihan_angsuran+$tagihan_keswan));

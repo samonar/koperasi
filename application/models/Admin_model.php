@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Admin_model extends CI_Model{
 
     public $table = 'user';
-    public $id = 'id';
+    public $id = 'id_user';
     public $order = 'DESC';
 
     
@@ -25,6 +25,14 @@ class Admin_model extends CI_Model{
     public function get_all(){
         $this->db->order_by($this->id, $this->order);
         return $this->db->get($this->table);
+    }
+
+    //cek sesion user
+    public function cek_sesion($id_user,$bagian)
+    {
+        $this->db->where($this->id,$id_user);
+        $this->db->where('bagian',$bagian);
+        return $this->db->get($this->table)->row();
     }
 
     //get by username dan password

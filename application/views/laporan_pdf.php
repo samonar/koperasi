@@ -74,6 +74,7 @@
   margin: 0;
   font: 16px Arial;
 }
+/* div.module{} */
 
   </style>
 </head>
@@ -81,21 +82,21 @@
   <!-- In production server. If you choose this, then comment the local server and uncomment this one-->
   <!-- <img src="<?php // echo $_SERVER['DOCUMENT_ROOT']."/media/dist/img/no-signal.png"; ?>" alt=""> -->
   <!-- In your local server -->
-  <img src="C:/xampp/htdocs/sppb/assets/dist/img/kwitansi.jpg" style="width:700px;height:340px;">
-  <!--<img src="<?php echo base_url()?>assets/dist/img/kwitansi.jpg" style="width:700px;height:340px;">-->
-  <div class="module">
- <div class="no"><?php echo $data_tagihan->id_pembayaran ?></div>
- <div class="penerima"><?php echo $data_tagihan->nama_siswa ?></div>
- <div class="terbilang"><?php echo $pembilang ?></div>
- <?php $bulan = array('1'=>'Januari','Februari','Maret' ,'April' ,'Mei','Juni','Juli','Agustus', 'September','Oktober','November','Desember');
- foreach ($bulan as $index => $nama_bulan) {
-   if ($data_tagihan->bulan==$index) {?>
-         <div class="pembayaran"><?php echo $data_tagihan->jn_tagihan.' Bulan '.$nama_bulan  ?></div>
-   <?php }
- }?>
- <div class="tgl"><?php echo $data_tagihan->date ?></div>
- <div class="rp"><?php echo $data_tagihan->nominal ?></div>
- <div class="bendahara">Dewi Sri</div>
+  <img src="<?php echo $_SERVER['DOCUMENT_ROOT']."/spp/assets/dist/img/kwitansi.jpg"; ?>" style="width:700px;height:340px;">
+  
+  <div class="module" >
+    <div class="no"><?php echo $data_tagihan->id_pembayaran ?></div>
+    <div class="penerima"><?php echo $data_tagihan->nama_siswa ?></div>
+    <div class="terbilang"><?php echo $pembilang ?></div>
+    <?php $bulan = array('1'=>'Januari','Februari','Maret' ,'April' ,'Mei','Juni','Juli','Agustus', 'September','Oktober','November','Desember');
+    foreach ($bulan as $index => $nama_bulan) {
+      if ($data_tagihan->bulan==$index) {?>
+            <div class="pembayaran"><?php echo $data_tagihan->jn_tagihan.' Bulan '.$nama_bulan  ?></div>
+      <?php }
+    }?>
+    <div class="tgl"><?php echo $data_tagihan->date ?></div>
+    <div class="rp"><?php echo $data_tagihan->nominal ?></div>
+    <div class="bendahara">Dewi Sri</div>
 </div>
 </body>
 </html>

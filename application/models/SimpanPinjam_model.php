@@ -35,6 +35,10 @@ class SimpanPinjam_model extends CI_Model
     public function delete($id_ssp)
 	{
 		return $this->db->delete($this->table, ['id_ssp' => $id_ssp]);
-	}
+    }
+    
+    function insert($data){
+        $this->db->insert($this->table,$data);
+    }
 }
 ?>

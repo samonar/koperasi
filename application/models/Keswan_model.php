@@ -11,4 +11,8 @@ class Keswan_model extends CI_Model{
         $this->db->where('id_anggota',$id);
         return $this->db->get($this->table);
     }
+    function insert($data){
+        $this->db->insert($this->table,$data);
+    }
 }
+

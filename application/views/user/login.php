@@ -36,8 +36,8 @@
                         <div class="col-sm-6 col-sm-offset-3 form-box">
                             <div class="form-top">
                                 <div class="form-top-left">
-                                    <h3>Login SPP</h3>
-                                    <p>Masukkan username dan fsdfsd</p>
+                                    <h3>LOGIN SISTEM KUD</h3>
+                                    <p>Masukkan username dan password</p>
                                 </div>
                                 <div class="form-top-right">
                                     <i class="fa fa-lock"></i>
@@ -48,11 +48,11 @@
                                     <?php echo $this->session->flashdata('message');?>
                                     <div class="form-group">
                                         <label class="sr-only" for="form-username">Username</label>
-                                        <input type="text" name="username" placeholder="Username / NIS..." class="form-username form-control" id="form-username">
+                                        <input type="text" name="username" placeholder="Username" class="form-username form-control" id="form-username">
                                     </div>
                                     <div class="form-group">
                                         <label class="sr-only" for="form-password">Password</label>
-                                        <input type="password" name="password" placeholder="Password..." class="form-password form-control" id="form-password">
+                                        <input type="password" name="password" placeholder="Password" class="form-password form-control" id="form-password">
                                     </div>
                                     <button type="submit" class="btn btn-danger btn-lg">Log In!</button>
                                     
