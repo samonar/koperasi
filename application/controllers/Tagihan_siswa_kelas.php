@@ -501,9 +501,9 @@ class Tagihan_siswa_kelas extends CI_Controller
      
 
     $this->load->library('pdf');
-   $this->pdf->setPaper('A5', 'landscape');
-   $this->pdf->filename = "kwitansi_siswa.pdf";
-   $this->pdf->load_view('laporan_pdf', $data);
+    $this->pdf->setPaper('A5', 'landscape');
+    $this->pdf->filename = "kwitansi_siswa.pdf";
+    $this->pdf->load_view('laporan_pdf', $data);
   }
 
   public function cek($id_tgh){

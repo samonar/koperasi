@@ -22,7 +22,22 @@ class SimpanPinjam_model extends CI_Model
 
     function get_bayar_byId($id){
         $this->db->where('id_anggota',$id);
-        $this->db->order_by('tgl',$this->order);
+        $this->db->order_by('tgl_ssp',$this->order);
+        return $this->db->get($this->table);
+    }
+    
+    function get_bayar_byIdSp($id){
+        $this->db->where('id_sp',$id);
+        $this->db->order_by('tgl_ssp',$this->order);
+        return $this->db->get($this->table);
+    }
+
+    function get_bayarAktf_byId($id_anggota,$id_sp){
+        $this->db->join('sp','skema_sp.id_sp=sp.id_sp');
+        $this->db->where('sp.id_anggota',$id_anggota);
+        $this->db->where('sp.id_sp',$id_sp);
+        $this->db->where('sp_aktif','1');
+        $this->db->order_by('tgl_ssp',$this->order);
         return $this->db->get($this->table);
     }
 

@@ -31,6 +31,8 @@ class Simpan_pinjam extends CI_Controller
     //fungsi angsuran sp bulanan
     function angsuran($id_anggota){
         $identitas=$this->ModelAnggota->get_by_id($id_anggota)->row();
+        $data_angsuranAktf=$this->Sp_model->get_sp_byIdAktf($id_anggota)->row();
+        $data_bayarAktf=$this->SimpanPinjam_model->get_bayarAktf_byId($id_anggota,$data_angsuranAktf->id_sp)->result();
         $data_angsuran=$this->Sp_model->get_sp_byId($id_anggota)->result();
         $data_bayar=$this->SimpanPinjam_model->get_bayar_byId($id_anggota)->result();
         $data=array(
@@ -43,6 +45,8 @@ class Simpan_pinjam extends CI_Controller
             'identitas'     => $identitas,
             'data_angsuran' => $data_angsuran,
             'data_bayar'    => $data_bayar,
+            'data_angsuranAktf' => $data_angsuranAktf,
+            'data_bayarAktf'    => $data_bayarAktf,
         );
         $this->template->display('simpan_pinjam/sp_form',$data);
     }
@@ -68,8 +72,10 @@ class Simpan_pinjam extends CI_Controller
     function edit_angsuran($id){
         $data_ssp=$this->Sp_model->getOne_angsuran($id);
         $identitas=$this->ModelAnggota->get_by_id($data_ssp->id_anggota)->row();
+        $data_angsuranAktf=$this->Sp_model->get_sp_byIdAktf($data_ssp->id_anggota)->row();
         $data_angsuran=$this->Sp_model->get_sp_byId($data_ssp->id_anggota)->result();
         $data_bayar=$this->SimpanPinjam_model->get_bayar_byId($data_ssp->id_anggota)->result();
+        $data_bayarAktf=$this->SimpanPinjam_model->get_bayarAktf_byId($data_ssp->id_anggota,$data_angsuranAktf->id_sp)->result();
         $data=array(
             'title' => 'Pinjaman Peternak',
             'active_header' =>'sp',
@@ -79,9 +85,11 @@ class Simpan_pinjam extends CI_Controller
             'action'        => site_url('simpan_pinjam/editAngsuran_action'),
             'id_sp'         => $id,
             'id_anggota'    => $data_ssp->id_anggota,
-            'nominal'       => $data_ssp->nominal,
+            'nominal'       => $data_ssp->pokok,
             'data_angsuran' => $data_angsuran,
+            'data_angsuranAktf' => $data_angsuranAktf,
             'data_bayar'    => $data_bayar,
+            'data_bayarAktf'    => $data_bayarAktf,
             'identitas'     => $identitas,
         );
         $this->template->display('simpan_pinjam/sp_form',$data);
@@ -92,7 +100,7 @@ class Simpan_pinjam extends CI_Controller
             $data=array(
             'id_ssp'         => $this->input->post('id_ssp'),
             'id_anggota'    => $this->input->post('id_anggota'),
-            'nominal'       => $this->input->post('nominal'),
+            'pokok'       => $this->input->post('nominal'),
             );
             $this->SimpanPinjam_model->update($data);
             $this->session->set_flashdata('message','Pencatatan Berhasil');
@@ -118,8 +126,10 @@ class Simpan_pinjam extends CI_Controller
     // pinjaman peternak
     function pinjam($id_anggota){
         $identitas=$this->ModelAnggota->get_by_id($id_anggota)->row();
+        $data_angsuranAktf=$this->Sp_model->get_sp_byIdAktf($id_anggota)->row();
         $data_angsuran=$this->Sp_model->get_sp_byId($id_anggota)->result();
         $data_bayar=$this->SimpanPinjam_model->get_bayar_byId($id_anggota)->result();
+        $data_bayarAktf=$this->SimpanPinjam_model->get_bayarAktf_byId($id_anggota,$data_angsuranAktf->id_sp)->result();
         $data=array(
             'title' => 'Pinjaman Peternak',
             'active_header' =>'sp',
@@ -128,10 +138,13 @@ class Simpan_pinjam extends CI_Controller
             'jn_form'       => 'form_pinjaman',
             'action'        => site_url('simpan_pinjam/pinjam_action'),
             'identitas'     => $identitas,
+            'data_angsuranAktf' => $data_angsuranAktf,
             'data_angsuran' => $data_angsuran,
             'data_bayar'    => $data_bayar,
+            'data_bayarAktf'    => $data_bayarAktf,
         );
         $this->template->display('simpan_pinjam/sp_form',$data);
+        
     }
 
     function pinjam_action(){
@@ -141,8 +154,14 @@ class Simpan_pinjam extends CI_Controller
             'id_anggota'    => $this->input->post('id_anggota'),
             'angsuran'      => $this->input->post('angsuran'),
             'nominal'       => $this->input->post('nominal'),
-            'tgl'           => date('Y-m-d'),
+            'tgl_sp'           => date('Y-m-d'),
+            'sp_aktif'      => '1',
+            'id_sp_lama'    => $this->input->post('id_sp_lama'),
             );
+            $data2=array('
+            sp_aktif'       =>'0',
+            );
+            $this->Sp_model->update_aktif($this->input->post('id_anggota'),$data2);
             $this->Sp_model->save($data);
             $this->session->set_flashdata('message','Pencatatan Berhasil');
             redirect(site_url("simpan_pinjam/pinjam/".$data['id_anggota']));
@@ -152,8 +171,12 @@ class Simpan_pinjam extends CI_Controller
         }
     }
 
+    
+
     function edit_pinjam($id){
         $data_sp=$this->Sp_model->getOne($id);
+        $data_angsuranAktf=$this->Sp_model->get_sp_byIdAktf($data_sp->id_anggota)->row();
+        $data_bayarAktf=$this->SimpanPinjam_model->get_bayarAktf_byId($data_sp->id_anggota,$data_angsuranAktf->id_sp)->result();
         $identitas=$this->ModelAnggota->get_by_id($data_sp->id_anggota)->row();
         $data_angsuran=$this->Sp_model->get_sp_byId($data_sp->id_anggota)->result();
         $data_bayar=$this->SimpanPinjam_model->get_bayar_byId($data_sp->id_anggota)->result();
@@ -169,7 +192,9 @@ class Simpan_pinjam extends CI_Controller
             'angsuran'      => $data_sp->angsuran,
             'nominal'       => $data_sp->nominal,
             'data_angsuran' => $data_angsuran,
+            'data_angsuranAktf' => $data_angsuranAktf,
             'data_bayar'    => $data_bayar,
+            'data_bayarAktf' => $data_bayarAktf,
             'identitas'     => $identitas,
         );
         $this->template->display('simpan_pinjam/sp_form',$data);
@@ -202,6 +227,30 @@ class Simpan_pinjam extends CI_Controller
             $this->session->set_flashdata('message', 'Record User Found');
             redirect(site_url('user'));
         }
-	}
+    }
+    
+    function realisasi_pinjaman($id_sp){
+        $this->load->library('pdfgenerator');
+        $pinjaman_baru=$this->Sp_model->getOne($id_sp);
+        $pinjaman_lama=$this->Sp_model->getOne($pinjaman_baru->id_sp_lama);
+
+        $data_angsuranAktf=$pinjaman_lama;
+        $data_bayarAktf=$this->SimpanPinjam_model->get_bayar_byIdSp($pinjaman_lama->id_sp)->result();
+        $identitas=$this->ModelAnggota->get_by_id($pinjaman_baru->id_anggota)->row();
+        // $data_angsuranAktf=$this->Sp_model->get_sp_byIdAktf($id_anggota)->row();
+        // $data_angsuran=$this->Sp_model->get_sp_byId($id_anggota)->result();
+        // $data_bayar=$this->SimpanPinjam_model->get_bayar_byId($id_anggota)->result();
+        // $data_bayarAktf=$this->SimpanPinjam_model->get_bayarAktf_byId($id_anggota,$data_angsuranAktf->id_sp)->result();
+        $data=array(
+            'identitas'     => $identitas,
+            'pinjaman_baru'    => $pinjaman_baru,
+            'data_bayarAktf'    => $data_bayarAktf,
+            'data_angsuranAktf' =>$data_angsuranAktf,
+        );
+        $this->load->view('simpan_pinjam/realisasi', $data);
+        $html = $this->load->view('simpan_pinjam/realisasi', $data, true);
+        $filename = 'slip_gaji'.date('m');
+        $this->pdfgenerator->generate($html, $filename, true, 'A5', 'portrait');
+    }
 }
 ?>

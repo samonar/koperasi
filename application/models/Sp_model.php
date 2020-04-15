@@ -39,7 +39,19 @@ class Sp_model extends CI_Model
 	//munir
 	function get_sp_byId($id){
 		$this->db->where('id_anggota',$id);
+		$this->db->order_by('tgl_sp','DESC');
 		return $this->db->get($this->table);
+	}
+
+	function get_sp_byIdAktf($id){
+		$this->db->where('id_anggota',$id);
+		$this->db->where('sp_aktif',1);
+		return $this->db->get($this->table);
+	}
+
+	function update_aktif($id,$data){
+		$this->db->where('id_anggota',$id);
+		$this->db->update($this->table, $data);
 	}
 
 }

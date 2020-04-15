@@ -1,5 +1,7 @@
+
 <!-- /.content-wrapper -->
 <footer class="main-footer">
+
   <strong>Copyright &copy; 2014-2018 <a href="<?php echo base_url()."assets/"; ?>http://adminlte.io">AdminLTE.io</a>.</strong>
   All rights reserved.
   <div class="float-right d-none d-sm-inline-block">
@@ -45,6 +47,11 @@
 <!-- AdminLTE for demo purposes -->
 <script src="<?php echo base_url()."assets/"; ?>dist/js/demo.js"></script>
 <!-- Page script -->
+
+<!-- OPTIONAL SCRIPTS -->
+<script src="<?php echo base_url()."assets/"; ?>plugins/chart.js/Chart.min.js"></script>
+<!-- <script src="<?php echo base_url()."assets/"; ?>dist/js/demo.js"></script> -->
+<script src="<?php echo base_url()."assets/"; ?>dist/js/pages/dashboard3.js"></script>
 
 <script>
 $(function () {
@@ -144,6 +151,7 @@ $(function () {
   $('.timepicker').timepicker({
     showInputs: false
   })
+  
 
   //disable by dropdown
   $('select[id=coba1]').eq(0).change(function () {
@@ -185,6 +193,83 @@ $(function () {
     }
 });
 
+})
+
+$(function () {
+  'use strict'
+
+  var ticksStyle = {
+    fontColor: '#495057',
+    fontStyle: 'bold'
+  }
+
+  var mode      = 'index'
+  var intersect = true
+
+  var $salesChart = $('#sales-chart')
+  var salesChart  = new Chart($salesChart, {
+    type   : 'bar',
+    data   : {
+      labels  : ['JAN','FEB','MAR','APR','MEI','JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
+      datasets: [
+        {
+          backgroundColor: '#007bff',
+          borderColor    : '#007bff',
+          data           : [<?php foreach ($data1 as $data) { echo $data.',';}; ?>]
+        },
+        {
+          backgroundColor: '#ced4da',
+          borderColor    : '#ced4da',
+          data           : [<?php foreach ($data2 as $data) { echo $data.',';}; ?>]
+        }
+      ]
+    },
+    options: {
+      maintainAspectRatio: true,
+      tooltips           : {
+        mode     : mode,
+        intersect: intersect
+      },
+      hover              : {
+        mode     : mode,
+        intersect: intersect
+      },
+      legend             : {
+        display: false
+      },
+      scales             : {
+        yAxes: [{
+          // display: false,
+          gridLines: {
+            display      : true,
+            color        : 'rgba(0, 0, 0, .2)',
+            zeroLineColor: 'transparent'
+          },
+          ticks    : $.extend({
+            beginAtZero: true,
+
+            // Include a dollar sign in the ticks
+            callback: function (value, index, values) {
+              if (value >= 1000) {
+                value / 1000
+                // value += ''
+              }
+              return value + ' K'
+            }
+          }, ticksStyle)
+        }],
+        xAxes: [{
+          display  : true,
+          gridLines: {
+            display: true,
+          },
+          ticks    : ticksStyle
+        }]
+      }
+    }
+  })
+
+  
 })
 </script>
 

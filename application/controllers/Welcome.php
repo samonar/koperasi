@@ -22,5 +22,7 @@ class Welcome extends CI_Controller {
 		$this->template->display('user/beranda_admin',$data);
 	
 	}
+
+	
 	
 }
