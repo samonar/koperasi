@@ -40,7 +40,6 @@
             for ($i=1; $i <= $hari ; $i++) { ?>
                 <tr>
                     <th><?php echo $start++ ?></th>
-                    <form action="<?php echo $action.'/'.$id_anggota ?>" method="post">
                     <td style=" text-align:center; ">
                     <?php 
                     if (empty($sesi1)) {
@@ -54,7 +53,7 @@
                              $hsl=0;   
                             }
                         }
-                    }?> <input  type="number" value="<?php echo $hsl ?>" class="form-control" onkeypress="return handleEnter(this, event)"  id=<?php echo $i.'P' ?> name=<?php echo $i.'P' ?> > <?php
+                    } echo $hsl;
                     
                     ?><?php 
                     ?></td>
@@ -103,10 +102,10 @@
                         
                     }else{
                         if ($id1==!null or $id2==!null) { ?>
-                            <td><button type="submit">simpan</button></td>
+                            <a href="<?php echo site_url('setoran/edit/'.$id1.'/'.$id2) ?>" >Edit</a>
                         <?php }
                     }
-                    ?> </form> <?php
+                    
                     $i++;
                     ?></td>
 

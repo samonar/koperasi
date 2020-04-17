@@ -17,34 +17,24 @@
                 <li class="list-group-item">
                 <b>Sisa Tagihan</b> <a class="float-right"><?php 
                 //menampilkan utang simpan pinjam 
-                if (empty($data_angsuran)) {
-                    $sum_sp[]=0;
-                    $total[]=0;
+                if (empty($data_angsuranAktf)) {
+                    $pokok=0;
+                    $tot_tagihan=0;
                 }else {
-                    foreach ($data_angsuran as $data) {
-                        $time=strtotime($data->tgl);
-                        $bln_mulai=date('Y-m',strtotime($data->tgl));
-                        $bln_akhir=date('Y-m',strtotime("+$data->angsuran Month",$time));
-                        if ( date('Y-m')>$bln_mulai and date('Y-m') <= $bln_akhir) {
-                            $sum_sp[]=($data->nominal / $data->angsuran);
-                            
-                        }else {
-                            $sum_sp[]=0;
-                        }
-                        $total[]=$data->nominal;
-                    }
+                    $pokok=($data_angsuranAktf->nominal / $data_angsuranAktf->angsuran);
+                    $tot_tagihan=$data_angsuranAktf->nominal;
                 }
                 
                 //menampilkan data pembayaran angsuran sp
-                if (empty($data_bayar)) {
+                if (empty($data_bayarAktf)) {
                     $sum_angsuran[]=0;
                 }else {
-                    foreach ($data_bayar as $data) {
-                        $sum_angsuran[]=$data->nominal;
+                    foreach ($data_bayarAktf as $data) {
+                        $sum_angsuran[]=$data->pokok;
                 }
                 }
                 // $gnrt_tagihan=array_sum($sum_sp);
-                echo $sisaTagihan=(array_sum($total) - array_sum($sum_angsuran));
+                echo $sisaTagihan=($tot_tagihan  - array_sum($sum_angsuran));
                 ?></a>
                 </li>
             </ul>
@@ -108,6 +98,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">Rp </span>
                                     </div>
+                                    <input type="hidden" name="id_sp_lama" value=<?php echo $data_angsuranAktf->id_sp ?> >
                                     <input type="hidden" name="id_anggota" value=<?php echo $identitas->id_anggota?>>
                                     <input type="hidden" name="id_sp" value=<?php if (isset($id_sp)) {
                                         echo $id_sp;
@@ -158,10 +149,11 @@
                                 <td style="text-align:center"><?php echo $start++?></td>
                                 <td style="text-align:center">Rp <?php echo $data->nominal?>,-</td>
                                 <td style="text-align:center"><?php echo $data->angsuran?> Bulan</td>
-                                <td style="text-align:center"><?php echo $data->tgl?>  </td>
+                                <td style="text-align:center"><?php echo $data->tgl_sp?>  </td>
                                 <td style="text-align:center">
                                     <a href="<?php echo site_url('simpan_pinjam/edit_pinjam/'.$data->id_sp)?>">Ubah</a>
                                     <a href="<?php echo site_url('simpan_pinjam/delete_pinjam/'.$data->id_sp.'/'.$data->id_anggota)?>" onclick="return checkDelete()">Hapus</a>
+                                    <a href="<?php echo site_url('simpan_pinjam/realisasi_pinjaman/'.$data->id_sp)?>">Cetak</a>
                                 </td>
                             </tr>
                         <?php } ?>
@@ -175,7 +167,9 @@
                     <table class="table table-bordered" id="example3">
                     <thead>
                         <th style=" width:5%; text-align:center">No</th>
-                        <th style="text-align:center">Nominal Bayar</th>
+                        <th style="text-align:center">Pokok</th>
+                        <th style="text-align:center">Bunga</th>
+                        <th style="text-align:center">Di Bayar</th>
                         <th style="text-align:center">Tanggal</th>
                         <th style="text-align:center">Aksi</th>
                     </thead>
@@ -184,8 +178,10 @@
                         foreach ($data_bayar as $data) {?>
                             <tr>
                                 <td style="text-align:center"><?php echo $start++?></td>
-                                <td style="text-align:right">Rp <?php echo $data->nominal?>,-</td>
-                                <td style="text-align:center"><?php echo date('Y-M-d',strtotime($data->tgl))?></td>
+                                <td style="text-align:right">Rp <?php echo $data->pokok?>,-</td>
+                                <td style="text-align:right">Rp <?php echo $data->bunga?>,-</td>
+                                <td style="text-align:right">Rp <?php echo $data->pokok + $data->bunga?>,-</td>
+                                <td style="text-align:center"><?php echo date('Y-M-d',strtotime($data->tgl_ssp))?></td>
                                 <td style="text-align:center">
                                     <a href="<?php echo site_url('simpan_pinjam/edit_angsuran/'.$data->id_ssp)?>">Ubah</a>
                                     <a href="<?php echo site_url('simpan_pinjam/delete_angsuran/'.$data->id_ssp.'/'.$data->id_anggota)?>" onclick="return checkDelete()">Hapus</a>

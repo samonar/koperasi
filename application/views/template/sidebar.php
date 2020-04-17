@@ -227,7 +227,7 @@
             <a href="<?php echo site_url('gaji') ?>" class="nav-link <?php if($active_header=='gaji'){?>active<?php } ?>">
               <i class="nav-icon fa fa-th"></i>
               <p>
-                Gaji
+                Pembayaran Susu
                 <i class="right fa fa-angle-left"></i>
               </p>
             </a>
@@ -240,6 +240,29 @@
                 <i class="right fa fa-angle-left"></i>
               </p>
             </a>
+          </li>
+          <li class="nav-item has-treeview <?php if($active_header=='grafik'){?>menu-open<?php } ?> ">
+            <a href="<?php echo site_url('setoran/bar') ?>" class="nav-link <?php if($active_header=='grafik'){?>active<?php } ?>">
+              <i class="nav-icon fa fa-th"></i>
+              <p>
+                Grafik Perkembangan
+                <i class="right fa fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="<?php echo site_url('setoran/bar') ?>" class="nav-link <?php if($active=='bar'){?>active<?php } ?> ">
+                  <i class="fa fa-circle-o nav-icon"></i>
+                  <p>Setoran Susu</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="<?php echo site_url('Setoran/ts') ?>" class="nav-link <?php if($active=='ts'){?>active<?php } ?>">
+                  <i class="fa fa-circle-o nav-icon"></i>
+                  <p>Grafik TS</p>
+                </a>
+              </li>
+            </ul>
           </li>
           <li class="nav-item has-treeview <?php if($active_header=='simpanan'){?>menu-open<?php } ?> ">
             <a href="<?php echo site_url('simpanan') ?>" class="nav-link <?php if($active_header=='simpanan'){?>active<?php } ?>">

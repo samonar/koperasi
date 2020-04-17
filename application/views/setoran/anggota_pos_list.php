@@ -24,7 +24,7 @@
                     <td><?php echo $list->nm_pos ?></td>
                     <td style="text-align:center" width="200px">
                         <?php 
-                            echo anchor(site_url('setoran/read/'.$list->id_anggota),'Read'); 
+                            echo anchor(site_url('setoran/create/'.$list->id_anggota),'Read'); 
                         ?>
                     </td>
                 </tr>

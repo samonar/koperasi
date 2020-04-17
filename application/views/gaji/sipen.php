@@ -1,32 +1,14 @@
 <div class="row">
-    <div class="col-md-3">
-        <div class="card card-primary card-outline">
-            <div class="card-body box-profile">
-            <div class="text-center">
-                <img class="profile-user-img img-fluid img-circle" src="<?php echo base_url('/assets/foto/murid.png')?>" alt="User profile picture">
-            </div>
-
-            <h3 class="profile-username text-center"><?php echo $identitas->nama ?></h3>
-            <ul class="list-group list-group-unbordered mb-3">
-                <li class="list-group-item">
-                <b>No Anggota</b> <a class="float-right"><?php echo $identitas->id_anggota?></a>
-                </li>
-                <li class="list-group-item">
-                <b>Pos</b> <a class="float-right"><?php echo $identitas->nm_pos?> </a>
-                </li>
-                <li class="list-group-item">
-                <b>Bulan</b> <a class="float-right"><?php echo date('M') ?></a>
-                </li>
-            </ul>
-            </div>
-            <!-- /.card-body -->
-        </div>
-    </div>
-
     <div class="col-md-9">
-        
+        <div class="card-header p-2">
+            <ul class="nav nav-pills">
+                <li class="nav-item"><a class="nav-link " href="#ambil" data-toggle="tab">Ambil Pakan</a></li>
+                <li class="nav-item"><a class="nav-link active" href="#histori" data-toggle="tab">Histori Ambil</a></li>
+                <li class="nav-item"><a class="nav-link " href="#bayar" data-toggle="tab">Bayar Pakan</a></li>
+            </ul>
+        </div>
         <div class="card-body">
-            <table class="table table-bordered " id="example1" >
+            <table  >
                 <thead>
                     <th style="text-align:center;">Tanggal</th>
                     <th style="text-align:center;">Jumlah Susu</th>
@@ -78,24 +60,34 @@
                 $tagihan_pakan=(array_sum($sum_pakan)-array_sum($sum_bayar));
 
                 //menampilkan utang simpan pinjam 
-                if (empty($data_angsuranAktf)) {
-                    $pokok=0;
-                    $tot_tagihan=0;
+                if (empty($data_angsuran)) {
+                    $sum_sp[]=0;
+                    $total[]=0;
                 }else {
-                    $pokok=($data_angsuranAktf->nominal / $data_angsuranAktf->angsuran);
-                    $tot_tagihan=$data_angsuranAktf->nominal;
+                    foreach ($data_angsuran as $data) {
+                        $time=strtotime($data->tgl);
+                        $bln_mulai=date('Y-m',strtotime($data->tgl));
+                        $bln_akhir=date('Y-m',strtotime("+$data->angsuran Month",$time));
+                        if ( date('Y-m')>$bln_mulai and date('Y-m') <= $bln_akhir) {
+                            $sum_sp[]=($data->nominal / $data->angsuran);
+                            
+                        }else {
+                            $sum_sp[]=0;
+                        }
+                        $total[]=$data->nominal;
+                    }
                 }
                 
                 //menampilkan data pembayaran angsuran sp
-                if (empty($data_bayarAktf)) {
+                if (empty($data_bayar)) {
                     $sum_angsuran[]=0;
                 }else {
-                    foreach ($data_bayarAktf as $data) {
-                        $sum_angsuran[]=$data->pokok;
+                    foreach ($data_bayar as $data) {
+                        $sum_angsuran[]=$data->nominal;
                 }
                 }
-                echo $gnrt_tagihan=$pokok;
-                $sisaTagihan=($tot_tagihan - array_sum($sum_angsuran));
+                $gnrt_tagihan=array_sum($sum_sp);
+                $sisaTagihan=(array_sum($total) - array_sum($sum_angsuran));
 
                 if( $gnrt_tagihan==0){
                     $tagihan_angsuran=$sisaTagihan;
@@ -106,8 +98,6 @@
                 }else {
                     $tagihan_angsuran=$gnrt_tagihan;
                 }
-                $bunga=$sisaTagihan*0.02;
-                $tagihan_angsuran=+$tagihan_angsuran+$bunga;
 
                 //menampilkan utang peternak di toko
                 if (empty($data_toko)) {
@@ -128,7 +118,7 @@
                 //total potongan
                 
                 ?>
-                <form action="<?php echo $action ?>" method="POST">
+                <!-- <form action="<?php echo $action ?>" method="POST">
                     <tr>
                         <td style="text-align:center;">01 s/d 10</td>
                         <td style="text-align:center;"><?php echo array_sum($periode1) ?></td>
@@ -150,35 +140,36 @@
                     <tr>
                         <th colspan="3" style="text-align:center;">Jumlah</th>
                         <td style="text-align:center;">Rp <?php echo $tot_setoran?></td>
-                        <input type="hidden" name="setoran" value=<?php echo $tot_setoran?>>
                     </tr>
                     <tr>
                         <td colspan="4" ></td>
                     </tr>
                     <tr>
                         <th colspan="3" >PENERIMAAN KOTOR</th> 
-                        <td style="text-align:center;">Rp <?php  echo $tot_setoran ?></td>
+                        <td style="text-align:center;">Rp <?php $tot_setoran=($data_hargaAktif->nominal_harga * array_sum($periode3)); echo $tot_setoran ?></td>
                     </tr>
                     <tr>
                         <th colspan="4" >POTONGAN</th> 
                     </tr>
                     <tr>
                         <th style="text-align:center;">Simpanan Wajib</th>
-                        <td colspan="3"><input type="hidden" class="form-control" name="simpanan_wajib" id="" value=10000>Rp 10.000</td>
-                        <input type="hidden" class="form-control" name="id_anggota" id="" value=<?php echo $identitas->id_anggota ?> >
+                        <td colspan="3">
+                        <input type="text" class="form-control" name="simpanan_wajib" id="" value=10000>Rp 10.000
+                        </td>
+                        
                         
                     </tr>
                     <tr>
                         <th style="text-align:center;">Simpanan Sukarela</th>
-                        <td colspan="3"><input type="hidden" class="form-control" name="simpanan_sukarela" id="" value=<?php echo $simsuk ?>>Rp <?php echo $simsuk ?> </td>
+                        <td colspan="3"><input type="text" class="form-control" name="simpanan_sukarela" id="" value=<?php echo $simsuk ?>>Rp <?php echo $simsuk ?> </td>
                     </tr>
                     <tr>
                         <th style="text-align:center;">Kesehatan Hewan</th>
-                        <td colspan="3"><input type="hidden" name="keswan" id="" value=<?php echo $keswan ?>>Rp <?php echo $keswan ?> </td>
+                        <td colspan="3"><input type="text" name="keswan" id="" value=<?php echo $keswan ?>>Rp <?php echo $keswan ?> </td>
                     </tr>
                     <tr>
                         <th style="text-align:center;">Dana Desa</th>
-                        <td colspan="3"><input type="hidden" name="dana_desa" id="" value=<?php echo $dana_desa ?>>Rp <?php echo $dana_desa ?></td>
+                        <td colspan="3"><input type="text" name="dana_desa" id="" value=<?php echo $dana_desa ?>>Rp <?php echo $dana_desa ?></td>
                     </tr>
                     <tr>
                         <th style="text-align:center;">Konsentrat</th>
@@ -194,7 +185,6 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text">Rp </span>
                             </div>
-                            <input type="hidden" name="bunga" value="<?php echo $bunga ?>">
                             <input class="form-control col-md-8" type="number" id="sp" name="sp" value=<?php echo $tagihan_angsuran ?> onkeypress="return handleEnter(this, event)" onchange="summation();">
                         </td>
                        
@@ -227,78 +217,15 @@
                     </tr>
                     <tr>
                         <th colspan="3" >TOTAL PENDAPATAN BERSIH</th>
-                        <th id="totalbersih" style="text-align: center;">Rp <?php echo $tot_setoran-$tot_potongan  ?></th>
+                        <th id="totalbersih" style="text-align: center;"><?php echo $tot_setoran-$tot_potongan  ?></th>
                     </tr>
+                
+
+                    <button type="submit">simpan</button>
+                </form> -->
                 </tbody>
-                <tr>
-                <td>
-                    <a href="http://localhost/kud_tl/gaji" class="btn btn-secondary">cancel</a>
-                </td>
-                <td>
-                    <button type="submit" class="btn btn-info float-right">simpan</button>
-                </td>
-                </tr>
-                </form>
             </table>
         </div>
     </div>
 </div>
-<script type="text/javascript">
-    function summation()
-    {
-        var spwajib = 10000;
-        var simsuk = <?= $simsuk ?>;
-        var keswan = <?= $keswan ?>;
-        var dana = <?= $dana_desa ?>;
-        var totalsetor = <?= $tot_setoran ?>;
-        var potlain = document.getElementById('potlain').value;
-        var kons = document.getElementById('konsentrat').value;
-        var sp = document.getElementById('sp').value;
-        var toko = document.getElementById('toko').value;
-        var total = (kons*1)+(sp*1)+(toko*1)+spwajib+simsuk+keswan+dana+(potlain*1);
-        var totalbersih = totalsetor - total;
-        document.getElementById('total').innerHTML = "Rp "+total;
-        document.getElementById('totalbersih').innerHTML = "Rp "+totalbersih;
-    }
-    function handleEnter (field, event) {
-		var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
-		if (keyCode == 13) {
-			var i;
-			for (i = 0; i < field.form.elements.length; i++)
-				if (field == field.form.elements[i])
-					break;
-			i = (i + 1) % field.form.elements.length;
-			field.form.elements[i].focus();
-			return false;
-		} 
-		else
-		return true;
-	}      
-</script>
 <?php
-// print_r($identitas);
-
-
-//menampilkan data setororan susu peternakl
-
-
-//menampilkan data peternak ambil pakan
-
-// if (isset($sum_pakan) and isset($sum_bayar) ) {
-//      echo " tagihan katul : Rp ".$tagihan_pakan;  
-// }else {
-//      "tagihan katul : Rp 0,- ";  
-// }
-// echo "<br>";
-
-
-// if (isset($sum_utangToko) or isset($sum_bayarToko) ) {
-//    echo "tagihan toko : Rp ".$tagihan_toko;  
-// }else {
-//      echo "tagihan toko : Rp 0,- ";  
-// }
-// echo "<br>";
-
-
-
-//keswan

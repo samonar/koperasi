@@ -28,6 +28,37 @@ class Setoran extends CI_Controller
         $this->template->display('setoran/setoran_list1', $data);
     }
 
+    function bar(){
+        $thn_ini=date('Y');
+        $thn_lalu=date('Y')-1;
+        for ($i=0 ; $i <12; $i++) { 
+            $query_this=$this->Setoran_model->setoran_byYear($thn_ini,$i)->row();
+            $query_last=$this->Setoran_model->setoran_byYear($thn_lalu,$i)->row();
+            if (isset($query_this->jumlah)) {
+                $data_this[$i]=$query_this->jumlah;
+            } else {
+                $data_this[$i]=0;
+            }
+
+            if (isset($query_last->jumlah)) {
+                $data_last[$i]=$query_this->jumlah;
+            } else {
+                $data_last[$i]=0;
+            }
+        }
+        
+		$data = array(
+			'action' => site_url('absensi/finish_action'),
+			'title'    	 => 'Grafik Setoran Susu',
+			'active'    => 'bar',
+            'active_header' => 'grafik',
+            'data1' => $data_this,
+            'data2'=> $data_last,
+        );
+        
+		$this->template->display('setoran/bar',$data);
+	}
+
     public function anggota_pos($id_pos){
         $anggota_pos=$this->Pos_model->get_anggota_pos($id_pos);
         $data = array(
@@ -62,20 +93,25 @@ class Setoran extends CI_Controller
 
     public function create($id) 
     {
+        $identitas=$this->ModelAnggota->get_by_id($id)->row();
+        $row = $this->Setoran_model->setoran_sesi1($id);
+        $row2 = $this->Setoran_model->setoran_sesi2($id);
         $data = array(
         'button' => 'Create',
-        'action' => site_url('setoran/create_action'),
+        'action' => site_url('setoran/create_action_2'),
         'title'         => 'Tambah Setoran',
         'active'    => 'setoran',
         'active_header' => '',
 	    'id_setoran'    => set_value('id_setoran'),
 	    'id_anggota' => $id,
-	    'tgl' => set_value('tgl'),
-	    'sesi' => set_value('sesi'),
+        'tgl' => set_value('tgl'),
+        'identitas'     => $identitas,
+        'sesi1' => $row,
+        'sesi2' => $row2,
         'jml_setoran' => set_value('jml_setoran'),
         
 	);
-        $this->template->display('setoran/setoran_form', $data);
+        $this->template->display('setoran/setoran_form_copy', $data);
     }
     
     public function create_action($id) 
@@ -116,6 +152,58 @@ class Setoran extends CI_Controller
         }
         $this->session->set_flashdata('message', 'Input Data Sukses');
         redirect(site_url('setoran/read/'.$id));
+    }
+
+    public function create_action_2($id) 
+    {
+        
+        if ($_POST==!null) {
+            $hit=count($_POST);
+            for ($i=1; $i <= 31  ; $i++) { 
+            $setor_pagi=$this->input->post($i.'P',TRUE);
+            $setor_sore=$this->input->post($i.'S',TRUE);
+                if (isset($setor_pagi) and isset($setor_sore)) {
+                    $pagi=str_replace(',','.',$setor_pagi);
+                    $sore=str_replace(',','.',$setor_sore);
+                break;
+                }
+            }
+            $kalender= CAL_GREGORIAN;
+            $bulan= date('m');
+            $tahun= date('Y');
+            $hari=$i;
+            $date=$tahun.'-'.$bulan.'-'.$hari;
+            if (isset($pagi)) {
+                $data = array(
+                    'id_anggota'    => $id,
+                    'tgl'           => $date,
+                    'sesi'          => 1,
+                    'jml_setoran'   => $pagi,
+                );
+                $cek_update=$this->Setoran_model->cek_update($id,$date,1)->row();
+                if(isset($cek_update)){
+                    $this->Setoran_model->update($cek_update->id_setoran,$data);
+                }else{$this->Setoran_model->insert($data);}
+            }
+            if (isset($sore)) {
+                $data = array(
+                    'id_anggota'    => $id,
+                    'tgl'           => $date,
+                    'sesi'          => 2,
+                    'jml_setoran'   => $sore,
+                );
+                $cek_update=$this->Setoran_model->cek_update($id,$date,2)->row();
+                if(isset($cek_update)){
+                    $this->Setoran_model->update($cek_update->id_setoran,$data);
+                }else{$this->Setoran_model->insert($data);}
+
+            }
+            
+        } else {
+            
+        }
+        $this->session->set_flashdata('message', 'Input Data Sukses');
+        redirect(site_url('setoran/create/'.$id));
     }
     
     public function update($id) 

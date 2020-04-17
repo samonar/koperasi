@@ -28,13 +28,21 @@ class Gaji extends CI_Controller{
     function gaji_peternak($id_anggota){
         $identitas=$this->ModelAnggota->get_by_id($id_anggota)->row();
         $data_setoran=$this->Setoran_model->get_Setoran_byId($id_anggota)->result();
+
         $data_pakanPakai= $this->Pakan_model->pakan_bulanan($id_anggota)->result();
         $data_pakanBayar=$this->Pakan_model->pakan_bayar($id_anggota)->result();
+
         $data_toko=$this->ModelToko->get_utangToko_byId($id_anggota)->result();
-        $data_angsuran=$this->Sp_model->get_sp_byId($id_anggota)->result();
+
+        $data_angsuran=$this->Sp_model->get_sp_byIdAktf($id_anggota)->result();
+        $data_angsuranAktf=$this->Sp_model->get_sp_byIdAktf($id_anggota)->row();
         $data_bayar=$this->SimpanPinjam_model->get_bayar_byId($id_anggota)->result();
+        $data_bayarAktf=$this->SimpanPinjam_model->get_bayarAktf_byId($id_anggota,$data_angsuranAktf->id_sp)->result();
+
+
         $data_keswan=$this->Keswan_model->get_Keswan_byId($id_anggota)->result();
-        $data_hargaAktif=$this->Harga_model->harga_aktif('susu')->row(); 
+
+        $data_susuAktif=$this->Harga_model->harga_aktif('susu')->row(); 
         $data=array(
         'title' => 'Gaji Peternak',
         'active_header' => 'gaji',
@@ -46,16 +54,56 @@ class Gaji extends CI_Controller{
         'data_pakanBayar' => $data_pakanBayar,
         'data_toko'     => $data_toko,
         'data_angsuran' => $data_angsuran,
+        'data_angsuranAktf' => $data_angsuranAktf,
         'data_bayar'    => $data_bayar,
+        'data_bayarAktf'    => $data_bayarAktf,
         'data_keswan'   => $data_keswan,
-        'data_hargaAktif' => $data_hargaAktif,
+        'data_hargaAktif' => $data_susuAktif,
         );
         $this->template->display('gaji/tampilan_gajian',$data);
     } 
 
+     function bukti_gaji($id_anggota){
+        $this->load->library('pdfgenerator');
+        // $data_gaji=$this->Gaji_model->get_byId();
+        $identitas=$this->ModelAnggota->get_by_id($id_anggota)->row();
+        $data_setoran=$this->Setoran_model->get_Setoran_byId($id_anggota)->result();
+        $data_pakanPakai= $this->Pakan_model->pakan_bulanan($id_anggota)->result();
+        $data_pakanBayar=$this->Pakan_model->pakan_bayar($id_anggota)->result();
+        $data_toko=$this->ModelToko->get_utangToko_byId($id_anggota)->result();
+
+        $data_angsuranAktf=$this->Sp_model->get_sp_byIdAktf($id_anggota)->row();
+        $data_angsuran=$this->Sp_model->get_sp_byId($id_anggota)->result();
+        $data_bayar=$this->SimpanPinjam_model->get_bayar_byId($id_anggota)->result();
+        $data_bayarAktf=$this->SimpanPinjam_model->get_bayarAktf_byId($id_anggota,$data_angsuranAktf->id_sp)->result();
+
+        $data_keswan=$this->Keswan_model->get_Keswan_byId($id_anggota)->result();
+        $data_hargaAktif=$this->Harga_model->harga_aktif('susu')->row(); 
+        $data=array(
+            'identitas'     => $identitas,
+            'data_setoran'  => $data_setoran,
+            'data_pakanPakai' => $data_pakanPakai,
+            'data_pakanBayar' => $data_pakanBayar,
+            'data_toko'     => $data_toko,
+            'data_angsuran' => $data_angsuran,
+            'data_angsuranAktf' => $data_angsuranAktf,
+            'data_bayarAktf' => $data_bayarAktf,
+            'data_bayar'    => $data_bayar,
+            'data_keswan'   => $data_keswan,
+            'data_hargaAktif' => $data_hargaAktif,
+            );
+        
+        $this->load->view('gaji/bukti_gaji', $data);
+
+        $html = $this->load->view('gaji/bukti_gaji', $data, true);
+        $filename = 'slip_gaji'.date('m');
+        $this->pdfgenerator->generate($html, $filename, true, 'A5', 'portrait');
+     }
+
     function gaji_peternak_action(){
-        if ($_POST['id_anggota'] ==! null) {
+        if ($_POST['id_anggota'] ==! null) { 
         $id_anggota = $this->input->post('id_anggota');
+        $data_angsuranAktf=$this->Sp_model->get_sp_byIdAktf($id_anggota)->row();
         $setoran= $this->input->post('setoran');
         $simpanan_wajib = $this->input->post('simpanan_wajib');
         $simpanan_sukarela     = $this->input->post('simpanan_sukarela');
@@ -63,6 +111,7 @@ class Gaji extends CI_Controller{
         $dana_desa    = $this->input->post('dana_desa');
         $konsentrat   = $this->input->post('konsentrat');
         $simpan_pinjam = $this->input->post('sp');
+        $bunga = $this->input->post('bunga');
         $utang_toko = $this->input->post('toko');
         $pot_lain=$this->input->post('pot_lain');
         
@@ -108,8 +157,10 @@ class Gaji extends CI_Controller{
         );
         $sp=array(
             'id_anggota'    => $id_anggota,
-            'nominal'       => $simpan_pinjam,
-            'tgl'           => date('Y-m-d'),
+            'id_sp'         => $data_angsuranAktf->id_sp,
+            'pokok'         => $simpan_pinjam-$bunga,
+            'bunga'         => $bunga,
+            'tgl_ssp'       => date('Y-m-d'),
         );
         $toko=array(
             'id_anggota' => $id_anggota,
@@ -125,8 +176,10 @@ class Gaji extends CI_Controller{
         $this->SimpanPinjam_model->insert($sp);
         $this->ModelToko->save($toko);
 
-        $this->session->set_flashdata('mesage','Simpan Data Berhasil');
-        redirect(site_url('gaji'));    
+        
+        $this->session->set_flashdata('message','Simpan Data Berhasil');
+        redirect(site_url('gaji'));   
+
         }
     }
 }
