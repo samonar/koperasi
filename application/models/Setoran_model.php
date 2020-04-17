@@ -211,6 +211,7 @@ class Setoran_model extends CI_Model
         return $this->db->query($sql);
     }
 
+<<<<<<< HEAD
     // ts tahunan
     function ts_byYear($thn,$bln){
         $sql="SELECT
@@ -223,6 +224,8 @@ class Setoran_model extends CI_Model
         return $this->db->query($sql);
     }
 
+=======
+>>>>>>> 6b44dd0b784e06f8d40365a030bf39d209aa0539
     function cek_update($id,$tgl,$sesi){
         $this->db->where('id_anggota',$id);
         $this->db->where('tgl',$tgl);

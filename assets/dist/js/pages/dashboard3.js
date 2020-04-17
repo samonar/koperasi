@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 $(function () {
   var ticksStyle = {
     fontColor: '#495057',
@@ -70,3 +71,6 @@ $(function () {
     }
   })
 }
+=======
+
+>>>>>>> 6b44dd0b784e06f8d40365a030bf39d209aa0539

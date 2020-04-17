@@ -24,6 +24,7 @@
     </div>
 
     <div class="col-md-9">
+<<<<<<< HEAD
         <div class="card-header p-2">
             <ul class="nav nav-pills">
                 <li class="nav-item"><a class="nav-link <?php if (isset($show) and $show=='pembayaran_susu' ) {
@@ -35,6 +36,9 @@
                 } ?>" href="#hist_bayar" data-toggle="tab">Hist. Pembayaran Susu</a></li>
             </ul>
         </div> 
+=======
+        
+>>>>>>> 6b44dd0b784e06f8d40365a030bf39d209aa0539
         <div class="card-body">
             <div class="tab-content">
             <div class="<?php if (isset($show) and $show=='pembayaran_susu') {echo "active";} ?> tab-pane" id=bayar>
@@ -89,6 +93,7 @@
                     }
                     $tagihan_pakan=(array_sum($sum_pakan)-array_sum($sum_bayar));
 
+<<<<<<< HEAD
                     //menampilkan utang simpan pinjam 
                     if (empty($data_angsuranAktf)) {
                         $pokok=0;
@@ -120,6 +125,39 @@
                     }
                     $bunga=$sisaTagihan*0.02;
                     $tagihan_angsuran=+$tagihan_angsuran+$bunga;
+=======
+                //menampilkan utang simpan pinjam 
+                if (empty($data_angsuranAktf)) {
+                    $pokok=0;
+                    $tot_tagihan=0;
+                }else {
+                    $pokok=($data_angsuranAktf->nominal / $data_angsuranAktf->angsuran);
+                    $tot_tagihan=$data_angsuranAktf->nominal;
+                }
+                
+                //menampilkan data pembayaran angsuran sp
+                if (empty($data_bayarAktf)) {
+                    $sum_angsuran[]=0;
+                }else {
+                    foreach ($data_bayarAktf as $data) {
+                        $sum_angsuran[]=$data->pokok;
+                }
+                }
+                echo $gnrt_tagihan=$pokok;
+                $sisaTagihan=($tot_tagihan - array_sum($sum_angsuran));
+
+                if( $gnrt_tagihan==0){
+                    $tagihan_angsuran=$sisaTagihan;
+                }elseif ($gnrt_tagihan > $sisaTagihan) {
+                    $tagihan_angsuran=$sisaTagihan;
+                }elseif($gnrt_tagihan < $sisaTagihan) {
+                    $tagihan_angsuran=$gnrt_tagihan;
+                }else {
+                    $tagihan_angsuran=$gnrt_tagihan;
+                }
+                $bunga=$sisaTagihan*0.02;
+                $tagihan_angsuran=+$tagihan_angsuran+$bunga;
+>>>>>>> 6b44dd0b784e06f8d40365a030bf39d209aa0539
 
                     //menampilkan utang peternak di toko
                     if (empty($data_toko)) {
@@ -137,6 +175,7 @@
                     }
                     $tagihan_toko=(array_sum($sum_utangToko)-array_sum($sum_bayarToko));                
 
+<<<<<<< HEAD
                     //total potongan
                     
                     ?>
@@ -209,6 +248,49 @@
                                 <input type="hidden" name="bunga" value="<?php echo $bunga ?>">
                                 <input class="form-control col-md-8" type="number" id="sp" name="sp" value=<?php echo $tagihan_angsuran ?> onkeypress="return handleEnter(this, event)" onchange="summation();">
                             </td>
+=======
+                //total potongan
+                
+                ?>
+                <form action="<?php echo $action ?>" method="POST">
+                    <tr>
+                        <td style="text-align:center;">01 s/d 10</td>
+                        <td style="text-align:center;"><?php echo array_sum($periode1) ?></td>
+                        <td style="text-align:center;">Rp <?php echo $data_hargaAktif->nominal_harga ?></td>
+                        <td style="text-align:center;">Rp <?php echo ($data_hargaAktif->nominal_harga * array_sum($periode1)) ?></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;">11 s/d 20</td>
+                        <td style="text-align:center;"><?php echo array_sum($periode2) ?></td>
+                        <td style="text-align:center;">Rp <?php echo $data_hargaAktif->nominal_harga ?></td>
+                        <td style="text-align:center;">Rp <?php echo ($data_hargaAktif->nominal_harga * array_sum($periode2)) ?></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;">21 s/d 31</td>
+                        <td style="text-align:center;"><?php echo array_sum($periode3) ?></td>
+                        <td style="text-align:center;">Rp <?php echo $data_hargaAktif->nominal_harga ?></td>
+                        <td style="text-align:center;">Rp <?php echo ($data_hargaAktif->nominal_harga * array_sum($periode3)) ?></td>
+                    </tr>
+                    <tr>
+                        <th colspan="3" style="text-align:center;">Jumlah</th>
+                        <td style="text-align:center;">Rp <?php echo $tot_setoran?></td>
+                        <input type="hidden" name="setoran" value=<?php echo $tot_setoran?>>
+                    </tr>
+                    <tr>
+                        <td colspan="4" ></td>
+                    </tr>
+                    <tr>
+                        <th colspan="3" >PENERIMAAN KOTOR</th> 
+                        <td style="text-align:center;">Rp <?php  echo $tot_setoran ?></td>
+                    </tr>
+                    <tr>
+                        <th colspan="4" >POTONGAN</th> 
+                    </tr>
+                    <tr>
+                        <th style="text-align:center;">Simpanan Wajib</th>
+                        <td colspan="3"><input type="hidden" class="form-control" name="simpanan_wajib" id="" value=10000>Rp 10.000</td>
+                        <input type="hidden" class="form-control" name="id_anggota" id="" value=<?php echo $identitas->id_anggota ?> >
+>>>>>>> 6b44dd0b784e06f8d40365a030bf39d209aa0539
                         
                         </tr>
                         <tr>
@@ -243,12 +325,24 @@
                         </tr>
                     </tbody>
                     <tr>
+<<<<<<< HEAD
                     <td>
                         <a href="http://localhost/kud_tl/gaji" class="btn btn-secondary">cancel</a>
                     </td>
                     <td>
                         <button type="submit" class="btn btn-info float-right">simpan</button>
                     </td>
+=======
+                        <th style="text-align:center;">Simpan Pinjam</th>
+                        <td colspan="3" class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Rp </span>
+                            </div>
+                            <input type="hidden" name="bunga" value="<?php echo $bunga ?>">
+                            <input class="form-control col-md-8" type="number" id="sp" name="sp" value=<?php echo $tagihan_angsuran ?> onkeypress="return handleEnter(this, event)" onchange="summation();">
+                        </td>
+                       
+>>>>>>> 6b44dd0b784e06f8d40365a030bf39d209aa0539
                     </tr>
                     </form>
                 </table>
@@ -275,8 +369,42 @@
                         <a href="<?php echo site_url('gaji/bukti_gaji/'.$data->id_gaji)?>">Cetak</a>
                         </td>
                     </tr>
+<<<<<<< HEAD
                     <?php } ?>
                 </tbody>
+=======
+                    <tr>
+                        <th style="text-align:center;">Potongan Lain</th>
+                        <td colspan="3"  class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Rp </span>
+                            </div><input class="form-control col-md-8" type="number" id="potlain" name="potlain" value="0" onchange="summation();"></td>
+                    </tr>
+                    <tr >
+                        <th colspan="2" >JUMLAH POTONGAN</th>
+                        
+                        <th colspan="4"  id="total" style="text-align:left;" ><?php 
+                        $tot_potongan=(10000+$simsuk+$keswan+$dana_desa+$tagihan_pakan+$tagihan_angsuran+$tagihan_toko); echo "Rp ".$tot_potongan  ?></th>
+                        
+                    </tr>
+                    <tr>
+                        <td colspan="4"></td>
+                    </tr>
+                    <tr>
+                        <th colspan="3" >TOTAL PENDAPATAN BERSIH</th>
+                        <th id="totalbersih" style="text-align: center;">Rp <?php echo $tot_setoran-$tot_potongan  ?></th>
+                    </tr>
+                </tbody>
+                <tr>
+                <td>
+                    <a href="http://localhost/kud_tl/gaji" class="btn btn-secondary">cancel</a>
+                </td>
+                <td>
+                    <button type="submit" class="btn btn-info float-right">simpan</button>
+                </td>
+                </tr>
+                </form>
+>>>>>>> 6b44dd0b784e06f8d40365a030bf39d209aa0539
             </table>
             </div>
         </div>

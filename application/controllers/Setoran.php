@@ -30,6 +30,7 @@ class Setoran extends CI_Controller
 
     function bar(){
         $thn_ini=date('Y');
+<<<<<<< HEAD
          $thn_lalu=date('Y')-1;
         for ($i=1 ; $i <=12; $i++) { 
             $query_this=$this->Setoran_model->setoran_byYear($thn_ini,$i)->row();
@@ -48,6 +49,25 @@ class Setoran extends CI_Controller
             }
         }
 
+=======
+        $thn_lalu=date('Y')-1;
+        for ($i=0 ; $i <12; $i++) { 
+            $query_this=$this->Setoran_model->setoran_byYear($thn_ini,$i)->row();
+            $query_last=$this->Setoran_model->setoran_byYear($thn_lalu,$i)->row();
+            if (isset($query_this->jumlah)) {
+                $data_this[$i]=$query_this->jumlah;
+            } else {
+                $data_this[$i]=0;
+            }
+
+            if (isset($query_last->jumlah)) {
+                $data_last[$i]=$query_this->jumlah;
+            } else {
+                $data_last[$i]=0;
+            }
+        }
+        
+>>>>>>> 6b44dd0b784e06f8d40365a030bf39d209aa0539
 		$data = array(
 			'action' => site_url('absensi/finish_action'),
 			'title'    	 => 'Grafik Setoran Susu',
@@ -58,6 +78,7 @@ class Setoran extends CI_Controller
         );
         
 		$this->template->display('setoran/bar',$data);
+<<<<<<< HEAD
     }
     
     function ts(){
@@ -89,6 +110,8 @@ class Setoran extends CI_Controller
             'data2'=> $data_last,
         );
         $this->template->display('setoran/line',$data);
+=======
+>>>>>>> 6b44dd0b784e06f8d40365a030bf39d209aa0539
 	}
 
     public function anggota_pos($id_pos){

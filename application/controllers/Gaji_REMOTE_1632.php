@@ -27,12 +27,7 @@ class Gaji extends CI_Controller{
 
     function gaji_peternak($id_anggota){
         $identitas=$this->ModelAnggota->get_by_id($id_anggota)->row();
-<<<<<<< HEAD
-        echo $bln=date('m')-1;
-        $data_setoran=$this->Setoran_model->get_Setoran_byId($id_anggota,$bln)->result();
-=======
         $data_setoran=$this->Setoran_model->get_Setoran_byId($id_anggota)->result();
->>>>>>> 6b44dd0b784e06f8d40365a030bf39d209aa0539
 
         $data_pakanPakai= $this->Pakan_model->pakan_bulanan($id_anggota)->result();
         $data_pakanBayar=$this->Pakan_model->pakan_bayar($id_anggota)->result();
@@ -46,17 +41,12 @@ class Gaji extends CI_Controller{
 
 
         $data_keswan=$this->Keswan_model->get_Keswan_byId($id_anggota)->result();
-<<<<<<< HEAD
-        $data_bayarSusu=$this->Gaji_model->get_by_idAnggota($id_anggota);
-=======
 
->>>>>>> 6b44dd0b784e06f8d40365a030bf39d209aa0539
         $data_susuAktif=$this->Harga_model->harga_aktif('susu')->row(); 
         $data=array(
         'title' => 'Gaji Peternak',
         'active_header' => 'gaji',
         'active'        => '-',
-        'show'          => 'pembayaran_susu',
         'action' => site_url('gaji/gaji_peternak_action'),
         'identitas'     => $identitas,
         'data_setoran'  => $data_setoran,
@@ -69,25 +59,10 @@ class Gaji extends CI_Controller{
         'data_bayarAktf'    => $data_bayarAktf,
         'data_keswan'   => $data_keswan,
         'data_hargaAktif' => $data_susuAktif,
-<<<<<<< HEAD
-        'data_bayarSusu'   => $data_bayarSusu,
-=======
->>>>>>> 6b44dd0b784e06f8d40365a030bf39d209aa0539
         );
         $this->template->display('gaji/tampilan_gajian',$data);
     } 
 
-<<<<<<< HEAD
-     function bukti_gaji($id_gaji){
-        $this->load->library('pdfgenerator');
-        $data_gaji=$this->Gaji_model->get_by_id($id_gaji);
-        $id_anggota=$data_gaji->id_anggota;
-        echo $bulan=date('m', strtotime($data_gaji->bulan));
-        echo $tahun=date('Y', strtotime($data_gaji->bulan));
-
-        $identitas=$this->ModelAnggota->get_by_id($id_anggota)->row();
-        $data_setoran=$this->Setoran_model->setoran_bulan_tertentu($id_anggota,$bulan,$tahun)->result();
-=======
      function bukti_gaji($id_anggota){
         $this->load->library('pdfgenerator');
         // $data_gaji=$this->Gaji_model->get_byId();
@@ -103,21 +78,10 @@ class Gaji extends CI_Controller{
         $data_bayarAktf=$this->SimpanPinjam_model->get_bayarAktf_byId($id_anggota,$data_angsuranAktf->id_sp)->result();
 
         $data_keswan=$this->Keswan_model->get_Keswan_byId($id_anggota)->result();
->>>>>>> 6b44dd0b784e06f8d40365a030bf39d209aa0539
         $data_hargaAktif=$this->Harga_model->harga_aktif('susu')->row(); 
         $data=array(
             'identitas'     => $identitas,
             'data_setoran'  => $data_setoran,
-<<<<<<< HEAD
-            'sim_wajib'     => $data_gaji->sim_wajib,
-            'sim_sukarela'  => $data_gaji->sim_sukarela,
-            'data_dana_desa' =>$data_gaji->dana_desa,
-            'data_lain'         =>$data_gaji->pot_lain,
-            'data_pakan' => $data_gaji->pakan,
-            'data_toko'     => $data_gaji->toko,
-            'data_angsuran' => $data_gaji->sp,
-            'data_keswan'   => $data_gaji->keswan,
-=======
             'data_pakanPakai' => $data_pakanPakai,
             'data_pakanBayar' => $data_pakanBayar,
             'data_toko'     => $data_toko,
@@ -126,7 +90,6 @@ class Gaji extends CI_Controller{
             'data_bayarAktf' => $data_bayarAktf,
             'data_bayar'    => $data_bayar,
             'data_keswan'   => $data_keswan,
->>>>>>> 6b44dd0b784e06f8d40365a030bf39d209aa0539
             'data_hargaAktif' => $data_hargaAktif,
             );
         
@@ -219,17 +182,5 @@ class Gaji extends CI_Controller{
 
         }
     }
-    
-    function delete_gaji($data,$id){
-		
-		if (!null==$data) {
-			$row=$this->Gaji_model->delete($data);
-            $this->session->set_flashdata('message', 'Hapus Data Berhasil');
-            redirect(site_url('gaji/gaji_peternak/'.$id));
-        } else {
-            $this->session->set_flashdata('message', 'Record User Found');
-            redirect(site_url('user'));
-        }
-	}
 }
 ?>
