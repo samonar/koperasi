@@ -25,8 +25,6 @@ class Sadur extends CI_Controller{
             $data_pakai_lama[$data->id_bahan]= $this->Sadur_model->sum_pakai_lama($data->id_bahan)->row();
             $data_pakai_baru[$data->id_bahan]= $this->Sadur_model->sum_pakai_baru($data->id_bahan)->row();
         }
-        print_r($data_stok_pakan);
-        
         $data=array(
             'title' => 'Unit Makanan Ternak',
             'active_header' => 'sadur',

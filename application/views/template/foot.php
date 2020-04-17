@@ -4,6 +4,15 @@
 
   <strong>Copyright &copy; 2014-2018 <a href="<?php echo base_url()."assets/"; ?>http://adminlte.io">AdminLTE.io</a>.</strong>
   All rights reserved.
+  <?php 
+  if(isset($data1) and isset($data2)){ 
+    $hasil=implode(",",$data1);
+    $hasil2=implode(",",$data2);
+  }else{
+    $hasil=0;
+    $hasil2=0;
+  }
+?>
   <div class="float-right d-none d-sm-inline-block">
     <b>Version</b> 3.0.0-alpha
   </div>
@@ -50,8 +59,12 @@
 
 <!-- OPTIONAL SCRIPTS -->
 <script src="<?php echo base_url()."assets/"; ?>plugins/chart.js/Chart.min.js"></script>
-<!-- <script src="<?php echo base_url()."assets/"; ?>dist/js/demo.js"></script> -->
-<script src="<?php echo base_url()."assets/"; ?>dist/js/pages/dashboard3.js"></script>
+<script src="<?php echo base_url()."assets/"; ?>dist/js/demo.js"></script>
+<!-- <script src="<?php echo base_url()."assets/"; ?>dist/js/pages/dashboard3.js"></script> -->
+
+<!-- Morris.js charts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="<?php echo base_url()."assets/"; ?>plugins/morris/morris.min.js"></script>
 
 <script>
 $(function () {
@@ -213,14 +226,14 @@ $(function () {
       labels  : ['JAN','FEB','MAR','APR','MEI','JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
       datasets: [
         {
-          backgroundColor: '#007bff',
+          backgroundColor: '#000035',
           borderColor    : '#007bff',
-          data           : [<?php foreach ($data1 as $data) { echo $data.',';}; ?>]
+          data           : [<?php echo $hasil   ?>]
         },
         {
-          backgroundColor: '#ced4da',
+          backgroundColor: '#007bff',
           borderColor    : '#ced4da',
-          data           : [<?php foreach ($data2 as $data) { echo $data.',';}; ?>]
+          data           : [<?php echo $hasil2 ?>]
         }
       ]
     },
@@ -269,8 +282,74 @@ $(function () {
     }
   })
 
+  var $visitorsChart = $('#visitors-chart')
+  var visitorsChart  = new Chart($visitorsChart, {
+    data   : {
+      labels  : ['JAN','FEB','MAR','APR','MEI','JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
+      datasets: [{
+        type                : 'line',
+        data                : [<?php echo $hasil ?>],
+        backgroundColor     : 'transparent',
+        borderColor         : '#007bff',
+        pointBorderColor    : '#007bff',
+        pointBackgroundColor: '#007bff',
+        fill                : false
+        // pointHoverBackgroundColor: '#007bff',
+        // pointHoverBorderColor    : '#007bff'
+      },
+        {
+          type                : 'line',
+          data                : [<?php echo $hasil2 ?>],
+          backgroundColor     : 'tansparent',
+          borderColor         : '#fd7e14',
+          pointBorderColor    : '#fd7e14',
+          pointBackgroundColor: '#fd7e14',
+          fill                : false
+          // pointHoverBackgroundColor: '#ced4da',
+          // pointHoverBorderColor    : '#ced4da'
+        }]
+    },
+    options: {
+      maintainAspectRatio: false,
+      tooltips           : {
+        mode     : mode,
+        intersect: intersect
+      },
+      hover              : {
+        mode     : mode,
+        intersect: intersect
+      },
+      legend             : {
+        display: false
+      },
+      scales             : {
+        yAxes: [{
+          // display: false,
+          gridLines: {
+            display      : true,
+            lineWidth    : '4px',
+            color        : 'rgba(0, 0, 0, .2)',
+            zeroLineColor: 'transparent'
+          },
+          ticks    : $.extend({
+            beginAtZero : true,
+            suggestedMax: 200
+          }, ticksStyle)
+        }],
+        xAxes: [{
+          display  : true,
+          gridLines: {
+            display: false
+          },
+          ticks    : ticksStyle
+        }]
+      }
+    }
+  })
   
 })
+
+
 </script>
 
 </body>

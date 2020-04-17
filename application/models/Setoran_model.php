@@ -119,18 +119,39 @@ class Setoran_model extends CI_Model
          return $this->db->query($sql)->result();
     }
 
-    function get_Setoran_byId($id){
-        $sql="SELECT
-        setoran.jml_setoran,
-        anggota.nama,
-        setoran.tgl
+    function get_Setoran_byId($id,$bln){
+        $sql="SELECT *
         FROM
         setoran
-        INNER JOIN anggota ON setoran.id_anggota = anggota.id_anggota
         WHERE
-        MONTH(tgl) = MONTH(NOW()) AND setoran.id_anggota=$id
+        MONTH(tgl) = $bln AND setoran.id_anggota=$id
+        and YEAR(tgl) = YEAR(NOW())
         ORDER BY
         setoran.tgl ASC
+        ";
+        return $this->db->query($sql);
+    }
+
+    function get_Setoran_byId2($id){
+        $sql="SELECT *
+        FROM
+        setoran
+        WHERE
+        MONTH(tgl) = month(now()) AND setoran.id_anggota=$id
+        ORDER BY
+        setoran.tgl ASC
+        ";
+        return $this->db->query($sql);
+    }
+
+    function setoran_bulan_tertentu($id,$bln,$thn){
+        $sql="SELECT *
+        FROM
+        setoran
+        WHERE
+        $thn=YEAR(setoran.tgl) and
+        $bln=month(setoran.tgl) and
+        $id=id_anggota
         ";
         return $this->db->query($sql);
     }
@@ -187,6 +208,18 @@ class Setoran_model extends CI_Model
         WHERE
         $thn=YEAR(setoran.tgl) and
         $bln=month(setoran.tgl)";
+        return $this->db->query($sql);
+    }
+
+    // ts tahunan
+    function ts_byYear($thn,$bln){
+        $sql="SELECT
+        SUM(ts.kadar) as jumlah
+        FROM
+        ts
+        WHERE
+        $thn=YEAR(ts.tgl_ts) and
+        $bln=month(ts.tgl_ts)";
         return $this->db->query($sql);
     }
 

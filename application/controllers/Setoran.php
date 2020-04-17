@@ -30,23 +30,24 @@ class Setoran extends CI_Controller
 
     function bar(){
         $thn_ini=date('Y');
-        $thn_lalu=date('Y')-1;
-        for ($i=0 ; $i <12; $i++) { 
+         $thn_lalu=date('Y')-1;
+        for ($i=1 ; $i <=12; $i++) { 
             $query_this=$this->Setoran_model->setoran_byYear($thn_ini,$i)->row();
             $query_last=$this->Setoran_model->setoran_byYear($thn_lalu,$i)->row();
             if (isset($query_this->jumlah)) {
-                $data_this[$i]=$query_this->jumlah;
+                $data_this[]=$query_this->jumlah;
             } else {
-                $data_this[$i]=0;
+                $data_this[]=0;
             }
 
             if (isset($query_last->jumlah)) {
-                $data_last[$i]=$query_this->jumlah;
+                $data_last[]=$query_last->jumlah;
+                
             } else {
-                $data_last[$i]=0;
+                $data_last[]=0;
             }
         }
-        
+
 		$data = array(
 			'action' => site_url('absensi/finish_action'),
 			'title'    	 => 'Grafik Setoran Susu',
@@ -57,6 +58,37 @@ class Setoran extends CI_Controller
         );
         
 		$this->template->display('setoran/bar',$data);
+    }
+    
+    function ts(){
+        $thn_ini=date('Y');
+         $thn_lalu=date('Y')-1;
+        for ($i=1 ; $i <=12; $i++) { 
+            $query_this=$this->Setoran_model->ts_byYear($thn_ini,$i)->row();
+            $query_last=$this->Setoran_model->ts_byYear($thn_lalu,$i)->row();
+            if (isset($query_this->jumlah)) {
+                $data_this[]=$query_this->jumlah;
+            } else {
+                $data_this[]=0;
+            }
+
+            if (isset($query_last->jumlah)) {
+                $data_last[]=$query_last->jumlah;
+                
+            } else {
+                $data_last[]=0;
+            }
+        }
+
+		$data = array(
+			'action' => site_url('absensi/finish_action'),
+			'title'    	 => 'Grafik Setoran Susu',
+			'active'    => 'ts',
+            'active_header' => 'grafik',
+            'data1' => $data_this,
+            'data2'=> $data_last,
+        );
+        $this->template->display('setoran/line',$data);
 	}
 
     public function anggota_pos($id_pos){
