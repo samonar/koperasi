@@ -231,7 +231,6 @@ $(function () {
       labels  : ['JAN','FEB','MAR','APR','MEI','JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
       datasets: [
         {
-<<<<<<< HEAD
           backgroundColor: '#000035',
           borderColor    : '#007bff',
           data           : [<?php echo $hasil   ?>]
@@ -240,16 +239,6 @@ $(function () {
           backgroundColor: '#007bff',
           borderColor    : '#ced4da',
           data           : [<?php echo $hasil2 ?>]
-=======
-          backgroundColor: '#007bff',
-          borderColor    : '#007bff',
-          data           : [<?php foreach ($data1 as $data) { echo $data.',';}; ?>]
-        },
-        {
-          backgroundColor: '#ced4da',
-          borderColor    : '#ced4da',
-          data           : [<?php foreach ($data2 as $data) { echo $data.',';}; ?>]
->>>>>>> 6b44dd0b784e06f8d40365a030bf39d209aa0539
         }
       ]
     },
@@ -298,7 +287,6 @@ $(function () {
     }
   })
 
-<<<<<<< HEAD
   var $visitorsChart = $('#visitors-chart')
   var visitorsChart  = new Chart($visitorsChart, {
     data   : {
@@ -367,10 +355,6 @@ $(function () {
 })
 
 
-=======
-  
-})
->>>>>>> 6b44dd0b784e06f8d40365a030bf39d209aa0539
 </script>
 
 </body>

@@ -27,12 +27,7 @@ class Gaji extends CI_Controller{
 
     function gaji_peternak($id_anggota){
         $identitas=$this->ModelAnggota->get_by_id($id_anggota)->row();
-<<<<<<< HEAD
-        echo $bln=date('m')-1;
-        $data_setoran=$this->Setoran_model->get_Setoran_byId($id_anggota,$bln)->result();
-=======
         $data_setoran=$this->Setoran_model->get_Setoran_byId($id_anggota)->result();
->>>>>>> 6b44dd0b784e06f8d40365a030bf39d209aa0539
 
         $data_pakanPakai= $this->Pakan_model->pakan_bulanan($id_anggota)->result();
         $data_pakanBayar=$this->Pakan_model->pakan_bayar($id_anggota)->result();
