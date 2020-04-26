@@ -59,17 +59,14 @@
 
 <!-- OPTIONAL SCRIPTS -->
 <script src="<?php echo base_url()."assets/"; ?>plugins/chart.js/Chart.min.js"></script>
-<<<<<<< HEAD
 <script src="<?php echo base_url()."assets/"; ?>dist/js/demo.js"></script>
 <!-- <script src="<?php echo base_url()."assets/"; ?>dist/js/pages/dashboard3.js"></script> -->
 
 <!-- Morris.js charts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
 <script src="<?php echo base_url()."assets/"; ?>plugins/morris/morris.min.js"></script>
-=======
 <!-- <script src="<?php echo base_url()."assets/"; ?>dist/js/demo.js"></script> -->
 <script src="<?php echo base_url()."assets/"; ?>dist/js/pages/dashboard3.js"></script>
->>>>>>> 6b44dd0b784e06f8d40365a030bf39d209aa0539
 
 <script>
 $(function () {
