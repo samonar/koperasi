@@ -31,4 +31,4 @@
 </table>
 <input type="hidden" name="id_proyek" value="<?php echo $id_proyek ?>">
 <br>
-</form>
+</form> 
